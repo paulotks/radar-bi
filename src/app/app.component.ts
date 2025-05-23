@@ -1,12 +1,12 @@
-import { Component, inject, OnDestroy, signal, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import {MediaMatcher} from '@angular/cdk/layout';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 export class AppComponent implements OnDestroy {
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
-  isCollapsed = true;
+  readonly isCollapsed = signal(true);
 
   protected readonly isMobile = signal(true);
   private readonly _mobileQuery: MediaQueryList;
@@ -33,12 +33,12 @@ export class AppComponent implements OnDestroy {
   }
 
   toggleMenu() {
-    if(this.isMobile()){
+    if (this.isMobile()) {
       this.sidenav.toggle();
-      this.isCollapsed = false; // On mobile, the menu can never be collapsed
+      this.isCollapsed.set(false);
     } else {
-      this.sidenav.open(); // On desktop/tablet, the menu can never be fully closed
-      this.isCollapsed = !this.isCollapsed;
+      this.sidenav.open();
+      this.isCollapsed.set(!this.isCollapsed());
     }
   }
 
