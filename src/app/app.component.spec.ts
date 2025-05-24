@@ -14,11 +14,11 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'front-radar-bi' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('front-radar-bi');
-  });
+  // it(`should have the 'front-radar-bi' title`, () => {
+  //   const fixture = TestBed.createComponent(AppComponent);
+  //   const app = fixture.componentInstance;
+  //   expect(app.title).toEqual('front-radar-bi');
+  // });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);

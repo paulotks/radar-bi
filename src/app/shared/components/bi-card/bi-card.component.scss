@@ -1,0 +1,47 @@
+@use '@angular/material' as mat;
+
+:host {
+  mat-card {
+    display: flex;
+    flex-direction: row;
+    margin: 3rem;
+
+
+    img {
+      max-width: 25rem;
+    }
+
+    .content-container {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+
+      mat-chip-set {
+        @include mat.chips-overrides((
+          outline-color: var(--mat-sys-primary),
+          disabled-outline-color: var(--mat-sys-outline),
+        ));
+        margin-top: auto;
+        padding: 1rem;
+      }
+
+      mat-card-actions {
+        margin-top: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      margin: 1rem;
+
+      img {
+
+        max-width: 100%;
+        height: auto;
+
+      }
+    }
+
+
+  }
+}

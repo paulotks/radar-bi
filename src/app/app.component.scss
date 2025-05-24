@@ -9,12 +9,19 @@
     bottom: 0;
     left: 0;
     right: 0;
+    padding-top:56px;
 
     background-color: var(--mat-sys-background);
     color: var(--mat-sys-on-background);
   }
 
   mat-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
     @include mat.toolbar-overrides((
       container-background-color: var(--mat-sys-primary),
       container-text-color: var(--mat-sys-on-primary),
@@ -67,7 +74,6 @@
     /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
        causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
     flex: 1;
-
 
 
     mat-sidenav {
