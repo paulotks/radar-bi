@@ -1,2 +1,57 @@
-<p>bi-list works!</p>
-<app-bi-card></app-bi-card>
+<div class="bi-list-container">
+  <h2>Ultimas atualizações</h2>
+  <div class="bi-filter-section">
+    <div class="filter-controls">
+      <form class="example-form">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Departamento</mat-label>
+          <mat-select [value]="selectedDepartment()" (selectionChange)="updateSelectedDepartment($event.value)">
+            <mat-option [value]="null">Todos os departamentos</mat-option>
+            @for (dept of departments(); track dept.id) {
+              <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Pesquisar</mat-label>
+          <input #searchQueryInput [value]="searchQuery()" (input)="updateSearchQuery(searchQueryInput.value)"
+                 matInput placeholder="Ex. Relatório de vendas">
+        </mat-form-field>
+
+        <!-- Tags filter -->
+        <div class="tags-filter">
+          <p class="tags-label">Tags:</p>
+          <div class="tags-container">
+            @for (tag of allTags(); track tag.id) {
+              <mat-chip-option
+                [selected]="isTagSelected(tag.id)"
+                (click)="toggleTag(tag.id)">
+                {{ tag.name }}
+              </mat-chip-option>
+            }
+          </div>
+        </div>
+        <!-- Reset filters button -->
+        <button mat-raised-button color="warn" (click)="resetFilters()">Limpar Filtros</button>
+      </form>
+    </div>
+  </div>
+
+
+
+  @if (filteredItems().length > 0) {
+
+    @for (post of filteredItems(); track post.id) {
+      <app-bi-card [post]="post"></app-bi-card>
+    }
+  } @else {
+    <div class="no-results">
+      <p>Nenhum resultado encontrado para os filtros selecionados.</p>
+    </div>
+  }
+</div>
+
+
+

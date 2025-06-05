@@ -4,8 +4,6 @@
   mat-card {
     display: flex;
     flex-direction: row;
-    margin: 3rem;
-
 
     img {
       max-width: 25rem;
@@ -21,8 +19,11 @@
           outline-color: var(--mat-sys-primary),
           disabled-outline-color: var(--mat-sys-outline),
         ));
-        margin-top: auto;
-        padding: 1rem;
+
+        & {
+          margin-top: auto;
+          padding: 1rem;
+        }
       }
 
       mat-card-actions {
@@ -35,13 +36,9 @@
       margin: 1rem;
 
       img {
-
         max-width: 100%;
         height: auto;
-
       }
     }
-
-
   }
 }

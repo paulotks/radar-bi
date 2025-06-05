@@ -9,10 +9,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding-top:56px;
-
-    background-color: var(--mat-sys-background);
-    color: var(--mat-sys-on-background);
+    padding-top: 56px;
   }
 
   mat-toolbar {
@@ -73,8 +70,12 @@
 
     /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
        causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
-    flex: 1;
+    & {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
 
+    }
 
     mat-sidenav {
       width: 4rem;
@@ -97,6 +98,28 @@
         gap: 1rem;
         color: var(--mat-sys-on-primary);
       }
+    }
+    mat-sidenav-content {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 2rem); /* Altura da viewport menos a altura da toolbar */
+
+      /* Este é o container principal para empurrar o footer para baixo */
+      .content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .app-footer {
+    padding: 2rem;
+    margin: 0;
+    margin-top: auto;
+
+    .footer-content {
+      text-align: center;
     }
   }
 

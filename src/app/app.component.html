@@ -14,41 +14,50 @@
     </button>
   </mat-toolbar>
 
-  <mat-sidenav-container class="sidenav-container" autosize>
-    <mat-sidenav [ngClass]="isCollapsed() ? 'collapsed' : 'expanded'"
-                 [mode]="isMobile() ? 'over' : 'side'" [fixedInViewport]="isMobile()" fixedTopGap="56"
-                 [opened]="isMobile() ? 'false' : 'true'">
-      <mat-nav-list>
-        <a mat-list-item>
-          <div class="nav-item">
-            <mat-icon>add</mat-icon>
-            @if (!isCollapsed()) {
-              <span class="item-label">Cadastrar BI</span>
-            }
+    <mat-sidenav-container class="sidenav-container" autosize>
+      <mat-sidenav [ngClass]="isCollapsed() ? 'collapsed' : 'expanded'"
+                   [mode]="isMobile() ? 'over' : 'side'" [fixedInViewport]="isMobile()" fixedTopGap="56"
+                   [opened]="isMobile() ? 'false' : 'true'">
+        <mat-nav-list>
+          <a mat-list-item>
+            <div class="nav-item">
+              <mat-icon>add</mat-icon>
+              @if (!isCollapsed()) {
+                <span class="item-label">Cadastrar BI</span>
+              }
+            </div>
+          </a>
+          <a mat-list-item>
+            <div class="nav-item">
+              <mat-icon>home</mat-icon>
+              @if (!isCollapsed()) {
+                <span>Departamentos</span>
+              }
+            </div>
+          </a>
+          <a mat-list-item>
+            <div class="nav-item">
+              <mat-icon>group</mat-icon>
+              @if (!isCollapsed()) {
+                <span>Usuários</span>
+              }
+            </div>
+          </a>
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+        <footer class="app-footer">
+          <div class="footer-content">
+            <p>&copy; 2025 - FGR Incorporações Radar BI - Todos os direitos reservados</p>
           </div>
-        </a>
-        <a mat-list-item>
-          <div class="nav-item">
-            <mat-icon>home</mat-icon>
-            @if (!isCollapsed()) {
-              <span>Departamentos</span>
-            }
-          </div>
-        </a>
-        <a mat-list-item>
-          <div class="nav-item">
-            <mat-icon>group</mat-icon>
-            @if (!isCollapsed()) {
-              <span>Usuários</span>
-            }
-          </div>
-        </a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+        </footer>
+
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+
 </div>
 
 
