@@ -11,7 +11,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatListItem, MatListModule, MatNavList} from '@angular/material/list';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbar, MatToolbarModule} from '@angular/material/toolbar';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 
