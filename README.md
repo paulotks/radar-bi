@@ -1,6 +1,7 @@
 # FrontRadarBi
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+Node version: 22.16.0
 
 ## Development server
 
