@@ -1,24 +1,37 @@
+@use '@angular/material' as mat;
 :host {
+
+  //@include mat.select-overrides((
+  //  panel-background-color: orange,
+  //  enabled-trigger-text-color: red,
+  //));
+
+  mat-nav-list {
+    a {
+      height: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      gap: 1rem;
+      color: var(--mat-sys-on-primary);
+
+      mat-icon {
+        margin-left: 0.4rem;
+      }
+
+      mat-form-field {
+        margin: 1rem 0 0 0;
+        align-self: center;
+      }
+    }
+  }
 
   .bi-filter-section {
     margin-bottom: 2rem;
-
-    .filter-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-
-      form {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-
-      }
-    }
-
-    .full-width {
-      width: 100%;
-    }
 
     .tags-filter {
       .tags-label {
@@ -33,7 +46,6 @@
       }
     }
   }
-
 
   .bi-list-container {
     margin: 2rem 4rem;
@@ -50,7 +62,6 @@
       border-radius: 8px;
       color: #666;
     }
-
 
     @media (max-width: 820px) {
       margin: 1rem 0.8rem;

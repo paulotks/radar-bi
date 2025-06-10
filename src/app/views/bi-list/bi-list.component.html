@@ -1,57 +1,99 @@
-<div class="bi-list-container">
-  <h2>Ultimas atualizações</h2>
-  <div class="bi-filter-section">
-    <div class="filter-controls">
-      <form class="example-form">
+<app-layout (sideNavCollapsed)="toggleMenu($event)">
+  <mat-nav-list class="nav-list">
+    <a mat-list-item>
+      <div class="nav-item">
+        <mat-icon>search</mat-icon>
+        @if (!isCollapsed()) {
+          <!--              appearance="outline"-->
+          <mat-form-field>
+            <mat-label>Pesquisar</mat-label>
+            <input #searchQueryInput [value]="searchQuery()" (input)="updateSearchQuery(searchQueryInput.value)"
+                   matInput placeholder="Ex. Relatório de vendas">
+          </mat-form-field>
+        }
+      </div>
+    </a>
+    <a mat-list-item>
+      <div class="nav-item">
+        <mat-icon>home</mat-icon>
+        @if (!isCollapsed()) {
+            <mat-form-field>
+              <mat-label>Departamento</mat-label>
+              <mat-select multiple [value]="selectedDepartment()" (selectionChange)="selectedDepartment.set($event.value)">
+                <mat-option [value]="null">Todos os departamentos</mat-option>
+                @for (dept of departments(); track dept.id) {
+                  <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+        }
+      </div>
+    </a>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Departamento</mat-label>
-          <mat-select [value]="selectedDepartment()" (selectionChange)="updateSelectedDepartment($event.value)">
-            <mat-option [value]="null">Todos os departamentos</mat-option>
-            @for (dept of departments(); track dept.id) {
-              <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+    <a mat-list-item>
+      <div class="nav-item">
+        <mat-icon>label</mat-icon>
+        @if (!isCollapsed()) {
+          <mat-form-field>
+            <mat-label>Tags</mat-label>
+            <mat-select multiple [value]="selectedTags()" (selectionChange)="selectedTags.set($event.value)">
+              @for (tag of allTags(); track tag.id) {
+                <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+    </a>
+    <a mat-list-item (click)="resetFilters()">
+      <div class="nav-item">
+        <mat-icon>refresh</mat-icon>
+        @if (!isCollapsed()) {
+          <span class="item-label">Limpar Filtros</span>
+        }
+      </div>
+    </a>
+  </mat-nav-list>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Pesquisar</mat-label>
-          <input #searchQueryInput [value]="searchQuery()" (input)="updateSearchQuery(searchQueryInput.value)"
-                 matInput placeholder="Ex. Relatório de vendas">
-        </mat-form-field>
+  <div class="content">
+    <div class="bi-list-container">
+      <h2>Ultimas atualizações</h2>
+      <div class="bi-filter-section">
+        <div class="filter-controls">
+          <form class="example-form">
 
-        <!-- Tags filter -->
-        <div class="tags-filter">
-          <p class="tags-label">Tags:</p>
-          <div class="tags-container">
-            @for (tag of allTags(); track tag.id) {
-              <mat-chip-option
-                [selected]="isTagSelected(tag.id)"
-                (click)="toggleTag(tag.id)">
-                {{ tag.name }}
-              </mat-chip-option>
-            }
-          </div>
+
+
+
+            <!--               Tags filter-->
+            <!--              <div class="tags-filter">-->
+            <!--                <p class="tags-label">Tags:</p>-->
+            <!--                <div class="tags-container">-->
+            <!--                  @for (tag of allTags(); track tag.id) {-->
+            <!--                    <mat-chip-option-->
+            <!--                      [selected]="isTagSelected(tag.id)"-->
+            <!--                      (click)="toggleTag(tag.id)">-->
+            <!--                      {{ tag.name }}-->
+            <!--                    </mat-chip-option>-->
+            <!--                  }-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--               Reset filters button -->
+            <button mat-raised-button color="warn" (click)="resetFilters()">Limpar Filtros</button>
+          </form>
         </div>
-        <!-- Reset filters button -->
-        <button mat-raised-button color="warn" (click)="resetFilters()">Limpar Filtros</button>
-      </form>
+      </div>
+
+      @if (filteredItems().length > 0) {
+
+        @for (post of filteredItems(); track post.id) {
+          <app-bi-card [post]="post"></app-bi-card>
+        }
+      } @else {
+        <div class="no-results">
+          <p>Nenhum resultado encontrado para os filtros selecionados.</p>
+        </div>
+      }
     </div>
   </div>
-
-
-
-  @if (filteredItems().length > 0) {
-
-    @for (post of filteredItems(); track post.id) {
-      <app-bi-card [post]="post"></app-bi-card>
-    }
-  } @else {
-    <div class="no-results">
-      <p>Nenhum resultado encontrado para os filtros selecionados.</p>
-    </div>
-  }
-</div>
-
-
-
+</app-layout>
