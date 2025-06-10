@@ -95,22 +95,10 @@ export class BiListComponent {
     });
   }
 
-  protected updateSearchQuery(query: string): void {
-    this.searchQuery.set(query);
-  }
-
-  // protected updateSelectedDepartment(departmentId: number | null): void {
-  //   this.selectedDepartment.set(departmentId);
-  // }
-
   protected resetFilters(): void {
     this.searchQuery.set('');
     this.selectedDepartment.set([]);
     this.selectedTags.set([]);
-  }
-
-  protected isTagSelected(tagId: number): boolean {
-    return this.selectedTags().includes(tagId);
   }
 
 }

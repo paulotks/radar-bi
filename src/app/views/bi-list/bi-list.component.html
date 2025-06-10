@@ -4,10 +4,9 @@
       <div class="nav-item">
         <mat-icon>search</mat-icon>
         @if (!isCollapsed()) {
-          <!--              appearance="outline"-->
           <mat-form-field>
             <mat-label>Pesquisar</mat-label>
-            <input #searchQueryInput [value]="searchQuery()" (input)="updateSearchQuery(searchQueryInput.value)"
+            <input #searchQueryInput [value]="searchQuery()" (input)="searchQuery.set(searchQueryInput.value)"
                    matInput placeholder="Ex. Relatório de vendas">
           </mat-form-field>
         }

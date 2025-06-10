@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {catchError, Observable, ReplaySubject, throwError} from 'rxjs';
 import {BiItem} from '../../models/posts/posts.model';
 import {environment} from '../../../../environments/environment';
 
@@ -12,8 +12,28 @@ export class BiListService {
 
   private http = inject(HttpClient);
 
+  private items$ = new ReplaySubject<BiItem[]>();
+
+  constructor() {
+    this.loadItems();
+  }
+
+  private loadItems() {
+    this.http.get<BiItem[]>(`${this.apiUrl}/posts`)
+      .pipe(
+        catchError(error => {
+          console.error('Error loading items:', error);
+          this.items$.error(error);
+          return throwError(() => error);
+        })
+      )
+      .subscribe(items => {
+        this.items$.next(items);
+      });
+  }
+
   getPosts(): Observable<BiItem[]> {
-    return this.http.get<BiItem[]>(`${this.apiUrl}/posts`);
+    return this.items$.asObservable();
   }
 
 }
