@@ -1,0 +1,155 @@
+@use '@angular/material' as mat;
+
+:host {
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-top: 56px;
+  }
+
+  mat-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    @include mat.toolbar-overrides((
+      container-background-color: var(--mat-sys-primary),
+      container-text-color: var(--mat-sys-on-primary),
+    ));
+
+    @include mat.icon-overrides((
+      color: var(--mat-sys-on-primary),
+    ));
+
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        height: 2.8rem;
+        width: auto;
+        margin: 0 0 0 1rem;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        margin: 0 0 0 1rem;
+      }
+    }
+
+    .is-mobile .toolbar {
+      position: fixed;
+      z-index: 2;
+    }
+  }
+
+  h1.app-name {
+    margin-left: 8px;
+  }
+
+  .sidenav-container {
+    @include mat.sidenav-overrides((
+      container-background-color: var(--mat-sys-primary),
+      container-text-color: var(--mat-sys-on-primary),
+    ));
+
+    @include mat.icon-overrides((
+      color: var(--mat-sys-on-primary),
+    ));
+
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+       causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    & {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+    }
+
+    .mat-drawer {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    mat-sidenav {
+      width: 4rem;
+
+      .transition-collapsed {
+        transition: width 0.3s ease;
+      }
+
+      &.collapsed {
+        width: 4.5rem;
+      }
+
+      &.expanded {
+        width: 18.5rem;
+      }
+    }
+
+    mat-nav-list {
+      a {
+        height: 3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        gap: 1rem;
+        color: var(--mat-sys-on-primary);
+
+        mat-icon {
+          margin-left: 0.4rem;
+        }
+
+        mat-form-field {
+          margin: 1rem 0 0 0;
+          align-self: center;
+        }
+      }
+    }
+    mat-sidenav-content {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 2rem); /* Altura da viewport menos a altura da toolbar */
+
+      /* Este é o container principal para empurrar o footer para baixo */
+      .content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .app-footer {
+    padding: 2rem;
+    margin: auto 0 0;
+
+    .footer-content {
+      text-align: center;
+    }
+  }
+
+  .is-mobile .sidenav-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+       `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+  }
+
+}
+
+

@@ -1,156 +1,99 @@
-<div class="app-container" [class.is-mobile]="isMobile()">
-  <mat-toolbar class="toolbar">
-    <div class="logo-container">
-      <button mat-icon-button (click)="toggleMenu()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <img class="logo" ngSrc="assets/Logo_FGR_w1sl43.png" width="617" height="323" alt="Logo FGR"/>
-      <p class="title">Radar BI</p>
-    </div>
-    <span class="spacer"></span>
-    <button mat-flat-button aria-label="Sair">
-      Sair
-      <mat-icon>logout</mat-icon>
-    </button>
-  </mat-toolbar>
-
-  <mat-sidenav-container class="sidenav-container" autosize>
-    <mat-sidenav [ngClass]="isCollapsed() ? 'collapsed' : 'expanded'"
-                 [mode]="isMobile() ? 'over' : 'side'" [fixedInViewport]="isMobile()" fixedTopGap="56"
-                 [opened]="isMobile() ? 'false' : 'true'">
-      <mat-nav-list>
-        @if (true) {
-          <a mat-list-item>
-            <div class="nav-item">
-              <mat-icon>add</mat-icon>
-              @if (!isCollapsed()) {
-                <span class="item-label">Cadastrar BI</span>
-              }
-            </div>
-          </a>
-          <a mat-list-item>
-            <div class="nav-item">
-              <mat-icon>group</mat-icon>
-              @if (!isCollapsed()) {
-                <span>Usuários</span>
-              }
-            </div>
-          </a>
+<app-layout (sideNavCollapsed)="toggleMenu($event)">
+  <mat-nav-list class="nav-list">
+    <a mat-list-item>
+      <div class="nav-item">
+        <mat-icon>search</mat-icon>
+        @if (!isCollapsed()) {
+          <!--              appearance="outline"-->
+          <mat-form-field>
+            <mat-label>Pesquisar</mat-label>
+            <input #searchQueryInput [value]="searchQuery()" (input)="updateSearchQuery(searchQueryInput.value)"
+                   matInput placeholder="Ex. Relatório de vendas">
+          </mat-form-field>
         }
+      </div>
+    </a>
+    <a mat-list-item>
+      <div class="nav-item">
+        <mat-icon>home</mat-icon>
+        @if (!isCollapsed()) {
+            <mat-form-field>
+              <mat-label>Departamento</mat-label>
+              <mat-select multiple [value]="selectedDepartment()" (selectionChange)="selectedDepartment.set($event.value)">
+                <mat-option [value]="null">Todos os departamentos</mat-option>
+                @for (dept of departments(); track dept.id) {
+                  <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+        }
+      </div>
+    </a>
 
-        <a mat-list-item>
-          <div class="nav-item">
-            <mat-icon>home</mat-icon>
-            @if (!isCollapsed()) {
-              <mat-form-field class="full-width">
-                <mat-label>Departamento</mat-label>
-                <mat-select [value]="selectedDepartment()" (selectionChange)="updateSelectedDepartment($event.value)">
-                  <mat-option [value]="null">Todos os departamentos</mat-option>
-                  @for (dept of departments(); track dept.id) {
-                    <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-            }
-          </div>
-        </a>
-        <a mat-list-item>
-          <div class="nav-item">
-            <mat-icon>search</mat-icon>
-            @if (!isCollapsed()) {
-<!--              appearance="outline"-->
-              <mat-form-field class="full-width">
-                <mat-label>Pesquisar</mat-label>
-                <input #searchQueryInput [value]="searchQuery()" (input)="updateSearchQuery(searchQueryInput.value)"
-                       matInput placeholder="Ex. Relatório de vendas">
-              </mat-form-field>
-            }
-          </div>
-        </a>
-        <a mat-list-item>
-          <div class="nav-item">
-            <mat-icon>label</mat-icon>
-            @if (!isCollapsed()) {
-              <mat-form-field class="full-width">
-                <mat-label>Tags</mat-label>
-                <mat-select [value]="selectedDepartment()" (selectionChange)="updateSelectedDepartment($event.value)">
-                  <mat-option [value]="null">Todas as tags</mat-option>
-                  @for (tag of allTags(); track tag.id) {
-                    <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-            }
-          </div>
-        </a>
+    <a mat-list-item>
+      <div class="nav-item">
+        <mat-icon>label</mat-icon>
+        @if (!isCollapsed()) {
+          <mat-form-field>
+            <mat-label>Tags</mat-label>
+            <mat-select multiple [value]="selectedTags()" (selectionChange)="selectedTags.set($event.value)">
+              @for (tag of allTags(); track tag.id) {
+                <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+    </a>
+    <a mat-list-item (click)="resetFilters()">
+      <div class="nav-item">
+        <mat-icon>refresh</mat-icon>
+        @if (!isCollapsed()) {
+          <span class="item-label">Limpar Filtros</span>
+        }
+      </div>
+    </a>
+  </mat-nav-list>
 
-        <a mat-list-item (click)="resetFilters()">
-          <div class="nav-item">
-            <mat-icon>refresh</mat-icon>
-            @if (!isCollapsed()) {
-              <span class="item-label">Limpar Filtros</span>
-            }
-          </div>
-        </a>
-
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <div class="bi-list-container">
-        <h2>Ultimas atualizações</h2>
-        <div class="bi-filter-section">
-          <div class="filter-controls">
-            <form class="example-form">
+  <div class="content">
+    <div class="bi-list-container">
+      <h2>Ultimas atualizações</h2>
+      <div class="bi-filter-section">
+        <div class="filter-controls">
+          <form class="example-form">
 
 
 
 
-<!--               Tags filter-->
-<!--              <div class="tags-filter">-->
-<!--                <p class="tags-label">Tags:</p>-->
-<!--                <div class="tags-container">-->
-<!--                  @for (tag of allTags(); track tag.id) {-->
-<!--                    <mat-chip-option-->
-<!--                      [selected]="isTagSelected(tag.id)"-->
-<!--                      (click)="toggleTag(tag.id)">-->
-<!--                      {{ tag.name }}-->
-<!--                    </mat-chip-option>-->
-<!--                  }-->
-<!--                </div>-->
-<!--              </div>-->
-<!--               Reset filters button -->
-              <button mat-raised-button color="warn" (click)="resetFilters()">Limpar Filtros</button>
-            </form>
-          </div>
+            <!--               Tags filter-->
+            <!--              <div class="tags-filter">-->
+            <!--                <p class="tags-label">Tags:</p>-->
+            <!--                <div class="tags-container">-->
+            <!--                  @for (tag of allTags(); track tag.id) {-->
+            <!--                    <mat-chip-option-->
+            <!--                      [selected]="isTagSelected(tag.id)"-->
+            <!--                      (click)="toggleTag(tag.id)">-->
+            <!--                      {{ tag.name }}-->
+            <!--                    </mat-chip-option>-->
+            <!--                  }-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--               Reset filters button -->
+            <button mat-raised-button color="warn" (click)="resetFilters()">Limpar Filtros</button>
+          </form>
         </div>
-
-        @if (filteredItems().length > 0) {
-
-          @for (post of filteredItems(); track post.id) {
-            <app-bi-card [post]="post"></app-bi-card>
-          }
-        } @else {
-          <div class="no-results">
-            <p>Nenhum resultado encontrado para os filtros selecionados.</p>
-          </div>
-        }
-
       </div>
 
+      @if (filteredItems().length > 0) {
 
-      <footer class="app-footer">
-        <div class="footer-content">
-          <p>&copy; 2025 - FGR Incorporações Radar BI - Todos os direitos reservados</p>
+        @for (post of filteredItems(); track post.id) {
+          <app-bi-card [post]="post"></app-bi-card>
+        }
+      } @else {
+        <div class="no-results">
+          <p>Nenhum resultado encontrado para os filtros selecionados.</p>
         </div>
-      </footer>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</div>
-
-
-
-
-
-
-
-
+      }
+    </div>
+  </div>
+</app-layout>

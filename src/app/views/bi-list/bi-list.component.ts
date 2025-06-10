@@ -1,36 +1,31 @@
-import {Component, computed, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, signal, ViewChild} from '@angular/core';
 import {BiCardComponent} from '@components/bi-card/bi-card.component';
 import {BiListService} from '@services/bi-list-service/bi-list.service';
 import {BiItem, Department, Tag} from '../../core/models/posts/posts.model';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListItem, MatListModule, MatNavList} from '@angular/material/list';
-import {MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule} from '@angular/material/sidenav';
-import {MatToolbar, MatToolbarModule} from '@angular/material/toolbar';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import {MediaMatcher} from '@angular/cdk/layout';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import { MatToolbarModule} from '@angular/material/toolbar';
+import { CommonModule } from '@angular/common';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
+import {LayoutComponent} from '@components/layout/layout.component';
 
 @Component({
   selector: 'app-bi-list',
-  imports: [CommonModule, MatIconModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, BiCardComponent, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule, MatIcon, MatListItem, MatNavList, MatSidenav, MatSidenavContainer, MatSidenavContent, MatToolbar, NgOptimizedImage],
+  imports: [CommonModule, MatIconModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, BiCardComponent, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule, MatIcon, MatListItem, MatNavList, LayoutComponent],
   templateUrl: './bi-list.component.html',
   styleUrl: './bi-list.component.scss'
 })
-export class BiListComponent implements OnDestroy {
+export class BiListComponent {
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
   readonly isCollapsed = signal(true);
-
-  protected readonly isMobile = signal(true);
-  private readonly _mobileQuery: MediaQueryList;
-  private readonly _mobileQueryListener: () => void;
-
 
   private biListService = inject(BiListService);
 
@@ -39,9 +34,9 @@ export class BiListComponent implements OnDestroy {
   protected departments = signal<Department[]>([]);
   protected allTags = signal<Tag[]>([]);
 
-  // filtros signals
+  // ftilros signals
   protected searchQuery = signal<string>('');
-  protected selectedDepartment = signal<number | null>(null);
+  protected selectedDepartment = signal<number[]>([]);
   protected selectedTags = signal<number[]>([]);
 
   // Computed, ele observa os signals e atualiza automaticamente
@@ -50,13 +45,14 @@ export class BiListComponent implements OnDestroy {
 
       //PASSAR TUDO PARA METODOS DEPOIS
       // Filtro por pesquisa
+      const searchText = this.searchQuery().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const matchesSearch = this.searchQuery() === '' ||
-        item.title.toLowerCase().includes(this.searchQuery().toLowerCase()) ||
-        item.description.toLowerCase().includes(this.searchQuery().toLowerCase());
+        item.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(searchText) ||
+        item.description.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(searchText);
 
       // Filtro por departamento
-      const matchesDepartment = this.selectedDepartment() === null ||
-        item.departmentId === this.selectedDepartment();
+      const matchesDepartment = this.selectedDepartment().length === 0 ||
+        this.selectedDepartment().includes(item.department.id);
 
       // filtro por tagos
       const matchesTags = this.selectedTags().length === 0 ||
@@ -68,21 +64,12 @@ export class BiListComponent implements OnDestroy {
 
   constructor() {
     this.loadData();
-    const media = inject(MediaMatcher);
-
-    this._mobileQuery = media.matchMedia('(max-width: 600px)');
-    this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQuery.addEventListener('change', this._mobileQueryListener);
-
   }
 
-  toggleMenu() {
-    if (this.isMobile()) {
-      this.sidenav.toggle();
+  toggleMenu(event: boolean) {
+    if (!event) {
       this.isCollapsed.set(false);
     } else {
-      this.sidenav.open();
       this.isCollapsed.set(!this.isCollapsed());
     }
   }
@@ -112,32 +99,18 @@ export class BiListComponent implements OnDestroy {
     this.searchQuery.set(query);
   }
 
-  protected updateSelectedDepartment(departmentId: number | null): void {
-    this.selectedDepartment.set(departmentId);
-  }
-
-  protected toggleTag(tagId: number): void {
-    const currentTags = this.selectedTags();
-    if (currentTags.includes(tagId)) {
-      this.selectedTags.set(currentTags.filter(id => id !== tagId));
-    } else {
-      this.selectedTags.set([...currentTags, tagId]);
-    }
-  }
+  // protected updateSelectedDepartment(departmentId: number | null): void {
+  //   this.selectedDepartment.set(departmentId);
+  // }
 
   protected resetFilters(): void {
     this.searchQuery.set('');
-    this.selectedDepartment.set(null);
+    this.selectedDepartment.set([]);
     this.selectedTags.set([]);
   }
 
   protected isTagSelected(tagId: number): boolean {
     return this.selectedTags().includes(tagId);
   }
-
-  ngOnDestroy(): void {
-    this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
-  }
-
 
 }
