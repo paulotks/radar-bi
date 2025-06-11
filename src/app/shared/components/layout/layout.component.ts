@@ -1,11 +1,11 @@
-import {Component, inject, OnDestroy, output, signal, ViewChild} from '@angular/core';
+import {Component, inject, output, ViewChild, AfterViewInit} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {NgOptimizedImage} from '@angular/common';
-import {MediaMatcher} from '@angular/cdk/layout';
+import {SidenavService} from '@services/sidenav-service/sidenav.service';
 
 @Component({
   selector: 'app-layout',
@@ -13,39 +13,28 @@ import {MediaMatcher} from '@angular/cdk/layout';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
-export class LayoutComponent implements OnDestroy {
+export class LayoutComponent implements AfterViewInit {
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
-  sideNavCollapsed = output<boolean>();
-  readonly isCollapsed = signal(true);
+  private sidenavService = inject(SidenavService);
 
-  protected readonly isMobile = signal(true);
-  private readonly _mobileQuery: MediaQueryList;
-  private readonly _mobileQueryListener: () => void;
+  sideNavCollapsed = output<boolean>();
+
+  readonly isCollapsed = this.sidenavService.isCollapsed;
+  readonly isMobile = this.sidenavService.isMobile;
 
   constructor() {
-    const media = inject(MediaMatcher);
+    this.sidenavService.registerSidenav(this.sidenav);
+  }
 
-    this._mobileQuery = media.matchMedia('(max-width: 600px)');
-    this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQuery.addEventListener('change', this._mobileQueryListener);
+  ngAfterViewInit(): void {
+    this.sidenavService.registerSidenav(this.sidenav);
   }
 
   toggleMenu() {
-    if (this.isMobile()) {
-      this.sidenav.toggle();
-      this.isCollapsed.set(false);
-    } else {
-      this.sidenav.open();
-      this.isCollapsed.set(!this.isCollapsed());
-    }
+    this.sidenavService.toggle();
 
     this.sideNavCollapsed.emit(this.isCollapsed());
-  }
-
-  ngOnDestroy(): void {
-    this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 
 }

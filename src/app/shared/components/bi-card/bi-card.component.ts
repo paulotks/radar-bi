@@ -14,4 +14,8 @@ export class BiCardComponent {
 
   post = input.required<BiItem>();
 
+  openBiLink(url: string) {
+    window.open(url, '_blank');
+  }
+
 }
