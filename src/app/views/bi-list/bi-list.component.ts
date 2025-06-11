@@ -1,8 +1,9 @@
 import {Component, computed, inject, signal, ViewChild} from '@angular/core';
 import {BiCardComponent} from '@components/bi-card/bi-card.component';
 import {BiListService} from '@services/bi-list-service/bi-list.service';
+import {SidenavService} from '@services/sidenav-service/sidenav.service';
 import {BiItem, Department, Tag} from '../../core/models/posts/posts.model';
-import {FormControl, FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
@@ -10,8 +11,8 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListItem, MatListModule, MatNavList} from '@angular/material/list';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-import { MatToolbarModule} from '@angular/material/toolbar';
-import { CommonModule } from '@angular/common';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {CommonModule} from '@angular/common';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {LayoutComponent} from '@components/layout/layout.component';
 
@@ -25,9 +26,11 @@ export class BiListComponent {
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
-  readonly isCollapsed = signal(true);
 
   private biListService = inject(BiListService);
+  private sidenavService = inject(SidenavService);
+
+  readonly isCollapsed = this.sidenavService.isCollapsed;
 
   // Signals puros
   protected biItems = signal<BiItem[]>([]);
@@ -66,12 +69,8 @@ export class BiListComponent {
     this.loadData();
   }
 
-  toggleMenu(event: boolean) {
-    if (!event) {
-      this.isCollapsed.set(false);
-    } else {
-      this.isCollapsed.set(!this.isCollapsed());
-    }
+  toggleSidenav() {
+    this.sidenavService.toggle();
   }
 
   private loadData(): void {

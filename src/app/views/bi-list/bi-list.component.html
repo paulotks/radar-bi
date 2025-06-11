@@ -1,8 +1,8 @@
-<app-layout (sideNavCollapsed)="toggleMenu($event)">
+<app-layout>
   <mat-nav-list class="nav-list">
     <a mat-list-item>
       <div class="nav-item">
-        <mat-icon>search</mat-icon>
+        <mat-icon (click)="toggleSidenav()">search</mat-icon>
         @if (!isCollapsed()) {
           <mat-form-field>
             <mat-label>Pesquisar</mat-label>
@@ -14,7 +14,7 @@
     </a>
     <a mat-list-item>
       <div class="nav-item">
-        <mat-icon>home</mat-icon>
+        <mat-icon (click)="toggleSidenav()">home</mat-icon>
         @if (!isCollapsed()) {
             <mat-form-field>
               <mat-label>Departamento</mat-label>
@@ -31,7 +31,7 @@
 
     <a mat-list-item>
       <div class="nav-item">
-        <mat-icon>label</mat-icon>
+        <mat-icon (click)="toggleSidenav()">label</mat-icon>
         @if (!isCollapsed()) {
           <mat-form-field>
             <mat-label>Tags</mat-label>
