@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>{{ data.imageTitle }}</h2>
+<mat-dialog-content>
+  <img mat-card-image [ngSrc]="data.imageUrl" [width]="300" [height]="200" [priority]="true"
+        alt="Photo of {{data.title}}" class="responsive-image">
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton mat-dialog-close cdkFocusInitial>Fechar</button>
+</mat-dialog-actions>
