@@ -19,7 +19,6 @@
             <mat-form-field>
               <mat-label>Departamento</mat-label>
               <mat-select multiple [value]="selectedDepartment()" (selectionChange)="selectedDepartment.set($event.value)">
-                <mat-option [value]="null">Todos os departamentos</mat-option>
                 @for (dept of departments(); track dept.id) {
                   <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
                 }
@@ -56,7 +55,7 @@
 
   <div class="content">
     <div class="bi-list-container">
-      <h2>Ultimas atualizações</h2>
+      <h2>Últimas atualizações</h2>
       <div class="bi-filter-section">
         <div class="filter-controls">
           <form class="example-form">
