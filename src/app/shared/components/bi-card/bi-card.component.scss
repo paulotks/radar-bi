@@ -11,6 +11,16 @@
       object-fit: cover;
     }
 
+    .hover-effect {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+    }
+
     img {
       max-width: 30rem;
     }
