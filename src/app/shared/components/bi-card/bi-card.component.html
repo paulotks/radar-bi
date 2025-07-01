@@ -1,7 +1,7 @@
 @if (post(); as Post) {
   <mat-card appearance="outlined">
     <img mat-card-image [ngSrc]="Post.imageUrl" [width]="300" [height]="200" [priority]="true"
-         alt="Photo of {{Post.title}}" class="responsive-image" (click)="openImageModal(Post.imageUrl, Post.title)">
+         alt="Photo of {{Post.title}}" class="responsive-image hover-effect" (click)="openImageModal(Post.imageUrl, Post.title)">
     <div class="content-container">
       <mat-card-header>
         <mat-card-title>{{ Post.title }}</mat-card-title>
