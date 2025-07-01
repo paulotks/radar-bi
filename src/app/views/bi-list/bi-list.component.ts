@@ -75,7 +75,9 @@ export class BiListComponent {
 
   private loadData(): void {
     this.biListService.getPosts().subscribe(items => {
-      this.biItems.set(items);
+      let orderItems = items.sort((a, b) => b.id - a.id);
+
+      this.biItems.set(orderItems);
 
       // Pega os departamentos únicos dos itens
       const uniqueDepartments = Array.from(
