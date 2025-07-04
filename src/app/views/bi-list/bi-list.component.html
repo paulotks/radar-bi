@@ -6,7 +6,7 @@
         @if (!isCollapsed()) {
           <mat-form-field>
             <mat-label>Pesquisar</mat-label>
-            <input #searchQueryInput [value]="searchQuery()" (input)="searchQuery.set(searchQueryInput.value)"
+            <input #searchQueryInput [value]="searchQuery()" (input)="setSearchQuery(searchQueryInput.value)"
                    matInput placeholder="Ex. Relatório de vendas">
           </mat-form-field>
         }
@@ -18,7 +18,7 @@
         @if (!isCollapsed()) {
             <mat-form-field>
               <mat-label>Departamento</mat-label>
-              <mat-select multiple [value]="selectedDepartment()" (selectionChange)="selectedDepartment.set($event.value)">
+              <mat-select multiple [value]="selectedDepartment()" (selectionChange)="setSelectedDepartment($event.value)">
                 @for (dept of departments(); track dept.id) {
                   <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
                 }
@@ -34,7 +34,7 @@
         @if (!isCollapsed()) {
           <mat-form-field>
             <mat-label>Tags</mat-label>
-            <mat-select multiple [value]="selectedTags()" (selectionChange)="selectedTags.set($event.value)">
+            <mat-select multiple [value]="selectedTags()" (selectionChange)="setSelectedTags($event.value)">
               @for (tag of allTags(); track tag.id) {
                 <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
               }
@@ -65,10 +65,18 @@
       </div>
 
       @if (filteredItems().length > 0) {
+          @for (post of paginatedItemsComputed(); track post.id) {
+            <app-bi-card [post]="post"></app-bi-card>
+          }
 
-        @for (post of filteredItems(); track post.id) {
-          <app-bi-card [post]="post"></app-bi-card>
-        }
+          <mat-paginator
+            [length]="filteredItems().length"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="[5, 10, 25, 50]"
+            (page)="handlePageEvent($event)"
+            aria-label="Selecione a página">
+          </mat-paginator>
+
       } @else {
         <div class="no-results">
           <p>Nenhum resultado encontrado para os filtros selecionados.</p>

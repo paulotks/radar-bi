@@ -15,10 +15,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {CommonModule} from '@angular/common';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {LayoutComponent} from '@components/layout/layout.component';
+import {MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-bi-list',
-  imports: [CommonModule, MatIconModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, BiCardComponent, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule, MatIcon, MatListItem, MatNavList, LayoutComponent],
+  imports: [CommonModule, MatIconModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule, BiCardComponent, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule, MatIcon, MatListItem, MatNavList, LayoutComponent, MatPaginatorModule],
   templateUrl: './bi-list.component.html',
   styleUrl: './bi-list.component.scss'
 })
@@ -26,6 +27,9 @@ export class BiListComponent {
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
 
   private biListService = inject(BiListService);
   private sidenavService = inject(SidenavService);
@@ -41,6 +45,15 @@ export class BiListComponent {
   protected searchQuery = signal<string>('');
   protected selectedDepartment = signal<number[]>([]);
   protected selectedTags = signal<number[]>([]);
+
+  //paginator signals
+  protected pageSize = signal(5);
+  protected pageIndex = signal(0);
+
+  constructor() {
+    this.loadData();
+
+  }
 
   // Computed, ele observa os signals e atualiza automaticamente
   protected filteredItems = computed(() => {
@@ -65,8 +78,24 @@ export class BiListComponent {
     });
   });
 
-  constructor() {
-    this.loadData();
+  setSearchQuery(value: string): void {
+    this.searchQuery.set(value);
+    this.resetPagination();
+  }
+
+  setSelectedDepartment(values: number[]): void {
+    this.selectedDepartment.set(values);
+    this.resetPagination();
+  }
+
+  setSelectedTags(values: number[]): void {
+    this.selectedTags.set(values);
+    this.resetPagination();
+  }
+
+  private resetPagination(): void {
+    this.pageIndex.set(0);
+    this.paginator.firstPage(); // pode ser opcional, dependendo do uso
   }
 
   toggleSidenav() {
@@ -96,10 +125,21 @@ export class BiListComponent {
     });
   }
 
+  paginatedItemsComputed = computed(() => {
+    const start = this.pageIndex() * this.pageSize();
+    return this.filteredItems().slice(start, start + this.pageSize());
+  });
+
+
+  handlePageEvent(event: PageEvent) {
+    this.pageSize.set(event.pageSize);
+    this.pageIndex.set(event.pageIndex);
+  }
+
   protected resetFilters(): void {
     this.searchQuery.set('');
     this.selectedDepartment.set([]);
     this.selectedTags.set([]);
+    this.resetPagination();
   }
-
 }
